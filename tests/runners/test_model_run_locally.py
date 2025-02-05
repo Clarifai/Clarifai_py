@@ -1,6 +1,7 @@
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -165,8 +166,10 @@ def test_test_model_success(model_run_locally):
     model_run_locally.clean_up()
 
 
-# @pytest.mark.skipif(shutil.which("docker") is None, reason="Docker not installed or not in PATH.")
-@pytest.mark.skip(reason="Will add later after new clarifai package is released")
+@pytest.mark.skipif(shutil.which("docker") is None, reason="Docker not installed or not in PATH.")
+@pytest.mark.skipif(
+    sys.platform not in ["linux", "darwin"],
+    reason="Test only runs on Linux and macOS because base image only supports those platforms.")
 def test_docker_build_and_test_container(model_run_locally):
   """
   Test building a Docker image and running a container test using the dummy model.
@@ -227,8 +230,11 @@ def test_hf_test_model_success(hf_model_run_locally):
     hf_model_run_locally.clean_up()
 
 
-# @pytest.mark.skipif(shutil.which("docker") is None, reason="Docker not installed or not in PATH.")
-@pytest.mark.skip(reason="Will add later after new clarifai package is released")
+# Skip the test if Docker is not installed or if the platform is not Linux/macOS
+@pytest.mark.skipif(shutil.which("docker") is None, reason="Docker not installed or not in PATH.")
+@pytest.mark.skipif(
+    sys.platform not in ["linux", "darwin"],
+    reason="Test only runs on Linux and macOS because base image only supports those platforms.")
 def test_hf_docker_build_and_test_container(hf_model_run_locally):
   """
   Test building a Docker image and running a container test using the dummy model.
